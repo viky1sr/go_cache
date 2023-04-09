@@ -102,6 +102,7 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	responseTrait.RespondWithSuccess(w, http.StatusCreated, "Success update user", resultUser)
 	return
+
 }
 
 func (c *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {

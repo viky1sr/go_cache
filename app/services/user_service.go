@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"github.com/viky1sr/go_cache.git/app/models"
 	"github.com/viky1sr/go_cache.git/app/repositories"
 	"github.com/viky1sr/go_cache.git/app/validators"
@@ -42,10 +43,14 @@ func (s *userService) CreateUser(user *models.User) error {
 	if err != nil {
 		return err
 	}
+
 	// Check if email already exists in the database
-	_, err = s.userRepo.FindByEmail(user.Email)
+	existingUserByEmail, err := s.userRepo.FindByEmail(user.Email)
 	if err != nil {
 		return err
+	}
+	if existingUserByEmail != nil {
+		return fmt.Errorf("Email already exists")
 	}
 
 	user.Password = hashPassword(user.Password)
@@ -64,9 +69,27 @@ func (s *userService) UpdateUser(id int, user *models.User) error {
 		return errors.New("invalid user ID")
 	}
 
-	if user == nil {
-		return errors.New("user cannot be nil")
+	err := s.userValidator.Validate(user)
+	if err != nil {
+		return err
 	}
+
+	// Check user in the database
+	_, err = s.userRepo.GetUserByID(id)
+	if err != nil {
+		return err
+	}
+
+	// Check if email already exists in the database, except for the current user
+	existingUserByEmail, err := s.userRepo.FindByEmail(user.Email)
+	if err != nil {
+		return err
+	}
+	if existingUserByEmail != nil && existingUserByEmail.ID != uint(id) {
+		return fmt.Errorf("Email already exists")
+	}
+
+	user.Password = hashPassword(user.Password)
 
 	return s.userRepo.UpdateUser(id, user)
 }

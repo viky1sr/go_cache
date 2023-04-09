@@ -7,7 +7,7 @@ import (
 type UserRepository interface {
 	GetAllUsers() ([]*models.User, error)
 	GetUserByID(id int) (*models.User, error)
-	FindByEmail(email string) (bool, error)
+	FindByEmail(email string) (*models.User, error)
 	CreateUser(user *models.User) error
 	UpdateUser(id int, user *models.User) error
 	DeleteUser(id int) error

@@ -56,20 +56,18 @@ func (repo *SqlUserRepository) GetUserByID(id int) (*models.User, error) {
 	return user, nil
 }
 
-func (repo *SqlUserRepository) FindByEmail(email string) (bool, error) {
+func (repo *SqlUserRepository) FindByEmail(email string) (*models.User, error) {
 	user := new(models.User)
 
 	row := repo.Db.QueryRow("SELECT * FROM users WHERE email=$1", email)
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return false, nil
+			return nil, nil
 		}
-		return false, err
+		return nil, err
 	}
-
-	// Jika email sudah ada di database, return false dan pesan error
-	return true, errors.New("email already registered")
+	return user, nil
 }
 
 func (repo *SqlUserRepository) CreateUser(user *models.User) error {
