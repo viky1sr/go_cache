@@ -26,7 +26,7 @@ func NewUserController(userService services.UserService) *UserController {
 func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := c.userService.GetAllUsers()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		responseTrait.RespondWithFailure(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -38,13 +38,13 @@ func (c *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		responseTrait.RespondWithFailure(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	user, err := c.userService.GetUserByID(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		responseTrait.RespondWithFailure(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -77,14 +77,14 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		responseTrait.RespondWithFailure(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	var user models.User
 	err = json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		responseTrait.RespondWithFailure(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -92,27 +92,32 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	err = c.userService.UpdateUser(id, &user)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		responseTrait.RespondWithFailure(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	resultUser := map[string]interface{}{
+		"name":  user.Name,
+		"email": user.Email,
+	}
+	responseTrait.RespondWithSuccess(w, http.StatusCreated, "Success update user", resultUser)
+	return
 }
 
 func (c *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		responseTrait.RespondWithFailure(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = c.userService.DeleteUser(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		responseTrait.RespondWithFailure(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	responseTrait.RespondWithSuccess(w, http.StatusNoContent, "Success delete user", "")
+	return
 }
