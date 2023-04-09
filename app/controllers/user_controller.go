@@ -11,6 +11,8 @@ import (
 	"github.com/viky1sr/go_cache.git/app/services"
 )
 
+var responseTrait = traits.ResponseTrait{}
+
 type UserController struct {
 	userService services.UserService
 }
@@ -52,7 +54,6 @@ func (c *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 
 func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
-	responseTrait := traits.ResponseTrait{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		responseTrait := traits.ResponseTrait{}
