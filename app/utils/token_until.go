@@ -19,20 +19,6 @@ func CheckPasswordHash(password, hash []byte) bool {
 	return err == nil
 }
 
-// GenerateJWT generates a new JWT token
-func GenerateJWT(userID uint64, jwtSecret string, jwtExpirationDuration time.Duration) (string, error) {
-	// Create the token
-	token := jwt.New(jwt.SigningMethodHS256)
-
-	// Set claims
-	claims := token.Claims.(jwt.MapClaims)
-	claims["userID"] = userID
-	claims["exp"] = time.Now().Add(jwtExpirationDuration).Unix()
-
-	// Generate encoded token and send it as response
-	return token.SignedString([]byte(jwtSecret))
-}
-
 // GenerateToken generates a JWT token for the provided user ID
 func GenerateToken(userID uint) (string, error) {
 	claims := jwt.MapClaims{}

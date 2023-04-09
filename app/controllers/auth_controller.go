@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/viky1sr/go_cache.git/app/services"
@@ -36,8 +35,6 @@ func (c *AuthController) Login(w http.ResponseWriter, r *http.Request) {
 		responseTrait.RespondWithFailure(w, http.StatusUnauthorized, err.Error())
 		return
 	}
-
-	fmt.Print(token, err)
 
 	// Return token
 	responseTrait := traits.ResponseTrait{}
