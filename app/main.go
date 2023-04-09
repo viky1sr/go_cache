@@ -23,12 +23,7 @@ func main() {
 
 	// create router
 	router := appProvider.ProvideRouter()
-
-	// register book routes
-	routes.RegisterBookRoutes(router, appProvider)
-
-	// register user routes
-	routes.RegisterUserRoutes(router, appProvider)
+	routes.RegisterRoutes(router, appProvider)
 
 	// start server
 	fmt.Printf("Starting server on %s:%s\n", appProvider.Host, appProvider.Port)
