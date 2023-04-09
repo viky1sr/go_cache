@@ -73,13 +73,30 @@ func (repo *SqlUserRepository) FindByEmail(email string) (bool, error) {
 }
 
 func (repo *SqlUserRepository) CreateUser(user *models.User) error {
-	query := `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id`
-
-	err := repo.Db.QueryRow(query, user.Name, user.Email, user.Password).Scan(&user.ID)
+	tx, err := repo.Db.Begin()
 	if err != nil {
 		return err
 	}
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
 
+	query := `INSERT INTO users (name, email, password) OUTPUT INSERTED.id VALUES (?, ?, ?);`
+	var id uint
+	err = tx.QueryRow(query, user.Name, user.Email, user.Password).Scan(&id)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	user.ID = id
+
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
 	return nil
 }
 

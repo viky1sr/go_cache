@@ -6,12 +6,21 @@ import (
 
 // Up function for books table migration
 func UpBooks(db *sql.DB) error {
-	_, err := db.Exec(`CREATE TABLE books (
-			id bigint identity PRIMARY KEY,
-			title VARCHAR(100) NOT NULL,
-			author VARCHAR(50) NOT NULL,
-			year INTEGER NOT NULL
-		);`)
+	_, err := db.Exec(`
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[books]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[users](
+        [id] [int] IDENTITY(1,1) NOT NULL,
+        [title] [varchar](255) NOT NULL,
+        [author] [varchar](255) NOT NULL,
+        [year] [integer] NOT NULL,
+        CONSTRAINT [PK_books] PRIMARY KEY CLUSTERED 
+        (
+            [id] ASC
+        )
+    )
+END
+`)
 	if err != nil {
 		return err
 	}

@@ -52,6 +52,7 @@ func (c *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 
 func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
+	responseTrait := traits.ResponseTrait{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		responseTrait := traits.ResponseTrait{}
@@ -60,12 +61,15 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	err = c.userService.CreateUser(&user)
 	if err != nil {
-		responseTrait := traits.ResponseTrait{}
 		responseTrait.RespondWithFailure(w, http.StatusBadRequest, err.Error())
 		return
 	}
-
-	w.WriteHeader(http.StatusCreated)
+	resultUser := map[string]interface{}{
+		"name":  user.Name,
+		"email": user.Email,
+	}
+	responseTrait.RespondWithSuccess(w, http.StatusCreated, "Success create user", resultUser)
+	return
 }
 
 func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {

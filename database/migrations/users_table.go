@@ -6,12 +6,21 @@ import (
 
 // Up function for users table migration
 func UpUsers(db *sql.DB) error {
-	_, err := db.Exec(`CREATE TABLE users (
-			id bigint identity PRIMARY KEY,
-			name VARCHAR(50) NOT NULL,
-			email VARCHAR(50) NOT NULL UNIQUE,
-			password VARCHAR(100) NOT NULL
-		);`)
+	_, err := db.Exec(`
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[users]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[users](
+        [id] [int] IDENTITY(1,1) NOT NULL,
+        [name] [varchar](255) NOT NULL,
+        [email] [varchar](255) NOT NULL,
+        [password] [varchar](255) NOT NULL,
+        CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED 
+        (
+            [id] ASC
+        )
+    )
+END
+`)
 	if err != nil {
 		return err
 	}

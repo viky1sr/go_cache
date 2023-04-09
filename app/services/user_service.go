@@ -38,7 +38,6 @@ func (s *userService) GetUserByID(id int) (*models.User, error) {
 }
 
 func (s *userService) CreateUser(user *models.User) error {
-	user.Password = hashPassword(user.Password)
 	err := s.userValidator.Validate(user)
 	if err != nil {
 		return err
@@ -48,6 +47,9 @@ func (s *userService) CreateUser(user *models.User) error {
 	if err != nil {
 		return err
 	}
+
+	user.Password = hashPassword(user.Password)
+
 	// Create the user
 	err = s.userRepo.CreateUser(user)
 	if err != nil {

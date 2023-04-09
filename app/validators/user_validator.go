@@ -41,6 +41,13 @@ func (v *UserValidator) Validate(user *models.User) error {
 				case "min":
 					return fmt.Errorf("Password must be at least %v characters", e.Param())
 				}
+			case "PasswordConfirm":
+				switch e.Tag() {
+				case "required":
+					return fmt.Errorf("Password confirmation is required")
+				case "eqfield":
+					return fmt.Errorf("Password confirmation does not match")
+				}
 			}
 		}
 	}
