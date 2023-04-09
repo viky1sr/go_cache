@@ -1,29 +1,30 @@
+.
 ├── app
-│   ├── controllers
-│   │   ├── book_controller.go
-│   │   └── user_controller.go
-│   ├── models
-│   │   ├── book.go
-│   │   └── user.go
-│   ├── providers
-│   │   ├── app_provider.go
-│   │   ├── book_provider.go
-│   │   ├── user_provider.go
-│   │   └── sql_provider.go
-│   ├── repositories
-│   │   ├── book_repository.go
-│   │   ├── sql_book_repository.go
-│   │   ├── user_repository.go
-│   │   └── sql_user_repository.go
-│   ├── routes
-│   │   ├── book_route.go
-│   │   └── user_route.go
-│   ├── services
-│   │   ├── book_service.go
-│   │   └── user_service.go
-│   ├── traits
-│   │   └── response_trait.go
-│   └── validation
-│       ├── book_validator.go
-│       └── user_validator.go
-└── main.go
+│   ├── controllers                // Folder to store controller files
+│   │   ├── book_controller.go     // Controller to handle book-related requests
+│   │   └── user_controller.go     // Controller to handle user-related requests
+│   ├── models                     // Folder to store model files
+│   │   ├── book.go                // Model struct for book
+│   │   └── user.go                // Model struct for user
+│   ├── providers                  // Folder to store provider files
+│   │   ├── app_provider.go        // Initializes database and server
+│   │   ├── book_provider.go       // Sets up service and repository for book
+│   │   ├── user_provider.go       // Sets up service and repository for user
+│   │   └── sql_provider.go        // Initializes SQL database
+│   ├── repositories               // Folder to store repository files
+│   │   ├── book_repository.go     // Repository interface for book
+│   │   ├── sql_book_repository.go // Repository implementation for book on SQL database
+│   │   ├── user_repository.go     // Repository interface for user
+│   │   └── sql_user_repository.go // Repository implementation for user on SQL database
+│   ├── routes                     // Folder to store route files
+│   │   ├── book_route.go          // Book-related routes
+│   │   └── user_route.go          // User-related routes
+│   ├── services                   // Folder to store service files
+│   │   ├── book_service.go        // Handles business logic for book
+│   │   └── user_service.go        // Handles business logic for user
+│   ├── traits                     // Folder to store trait files
+│   │   └── response_trait.go      // Adds standardized JSON response
+│   └── validation                 // Folder to store validation files
+│       ├── book_validator.go      // Defines validation rules for book
+│       └── user_validator.go      // Defines validation rules for user
+└── main.go                         // Entry point of the application
