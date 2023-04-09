@@ -84,7 +84,7 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err = json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		responseTrait.RespondWithFailure(w, http.StatusBadRequest, err.Error())
+		responseTrait.RespondWithFailure(w, http.StatusBadRequest, "Error, Body cant be null")
 		return
 	}
 
