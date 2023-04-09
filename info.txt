@@ -1,0 +1,29 @@
+├── app
+│   ├── controllers
+│   │   ├── book_controller.go
+│   │   └── user_controller.go
+│   ├── models
+│   │   ├── book.go
+│   │   └── user.go
+│   ├── providers
+│   │   ├── app_provider.go
+│   │   ├── book_provider.go
+│   │   ├── user_provider.go
+│   │   └── sql_provider.go
+│   ├── repositories
+│   │   ├── book_repository.go
+│   │   ├── sql_book_repository.go
+│   │   ├── user_repository.go
+│   │   └── sql_user_repository.go
+│   ├── routes
+│   │   ├── book_route.go
+│   │   └── user_route.go
+│   ├── services
+│   │   ├── book_service.go
+│   │   └── user_service.go
+│   ├── traits
+│   │   └── response_trait.go
+│   └── validation
+│       ├── book_validator.go
+│       └── user_validator.go
+└── main.go
