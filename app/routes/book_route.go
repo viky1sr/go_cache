@@ -20,5 +20,4 @@ func RegisterBookRoutes(router *mux.Router, provider *providers.AppProvider) {
 	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.GetBookByID))).Methods("GET")
 	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.UpdateBook))).Methods("PUT")
 	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.DeleteBook))).Methods("DELETE")
-	//123
 }
