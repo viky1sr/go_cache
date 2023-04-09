@@ -110,3 +110,14 @@ func (provider *AppProvider) ProvideUserController() *controllers.UserController
 
 	return controllers.NewUserController(userService)
 }
+
+func (provider *AppProvider) ProvideAuthController() *controllers.AuthController {
+	db, err := provider.ProvideDB()
+	if err != nil {
+		log.Fatalf("Failed to connect to DB: %s", err)
+	}
+
+	userRepository := repositories.NewSqlUserRepository(db)
+	authService := services.NewAuthService(userRepository)
+	return controllers.NewAuthController(authService)
+}

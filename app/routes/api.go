@@ -7,6 +7,7 @@ import (
 
 // RegisterRoutes registers all the routes
 func RegisterRoutes(router *mux.Router, appProvider *providers.AppProvider) {
+	RegisterAuthRoutes(router, appProvider)
 	RegisterUserRoutes(router, appProvider)
 	RegisterBookRoutes(router, appProvider)
 }

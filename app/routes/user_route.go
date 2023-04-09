@@ -1,37 +1,24 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/gorilla/mux"
+	"github.com/viky1sr/go_cache.git/app/middleware"
 	"github.com/viky1sr/go_cache.git/app/providers"
+	"net/http"
 )
 
 // RegisterUserRoutes registers user related routes
 func RegisterUserRoutes(router *mux.Router, provider *providers.AppProvider) {
 	userController := provider.ProvideUserController()
 
-	router.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			userController.GetAllUsers(w, r)
-		case "POST":
-			userController.CreateUser(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	}).Methods("GET", "POST")
+	// Define the JWT middleware
+	jwtMiddleware := middleware.JWTMiddleware
 
-	router.HandleFunc("/users/{id}", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			userController.GetUserByID(w, r)
-		case "PUT":
-			userController.UpdateUser(w, r)
-		case "DELETE":
-			userController.DeleteUser(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	}).Methods("GET", "PUT", "DELETE")
+	// Protected routes
+	router.Handle("/users", jwtMiddleware(http.HandlerFunc(userController.GetAllUsers))).Methods("GET")
+	router.Handle("/users", jwtMiddleware(http.HandlerFunc(userController.CreateUser))).Methods("POST")
+	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(userController.GetUserByID))).Methods("GET")
+	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(userController.UpdateUser))).Methods("PUT")
+	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(userController.DeleteUser))).Methods("DELETE")
+
 }

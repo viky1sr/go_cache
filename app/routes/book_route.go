@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/viky1sr/go_cache.git/app/middleware"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,27 +12,12 @@ import (
 func RegisterBookRoutes(router *mux.Router, provider *providers.AppProvider) {
 	bookController := provider.ProvideBookController()
 
-	router.HandleFunc("/books", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			bookController.GetAllBooks(w, r)
-		case "POST":
-			bookController.CreateBook(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	}).Methods("GET", "POST")
+	jwtMiddleware := middleware.JWTMiddleware
 
-	router.HandleFunc("/books/{id}", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			bookController.GetBookByID(w, r)
-		case "PUT":
-			bookController.UpdateBook(w, r)
-		case "DELETE":
-			bookController.DeleteBook(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	}).Methods("GET", "PUT", "DELETE")
+	// Protected routes
+	router.Handle("/users", jwtMiddleware(http.HandlerFunc(bookController.GetAllBooks))).Methods("GET")
+	router.Handle("/users", jwtMiddleware(http.HandlerFunc(bookController.CreateBook))).Methods("POST")
+	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.GetBookByID))).Methods("GET")
+	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.UpdateBook))).Methods("PUT")
+	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.DeleteBook))).Methods("DELETE")
 }

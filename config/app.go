@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+var JWTSecret = os.Getenv("JWT_SECRET")
+
 type DBConfig struct {
 	Host     string
 	Port     int
