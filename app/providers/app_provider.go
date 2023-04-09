@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/viky1sr/go_cache.git/app/validators"
+	"github.com/viky1sr/go_cache.git/database/migrations"
 	"log"
 
 	_ "github.com/denisenkom/go-mssqldb"
@@ -18,6 +19,7 @@ import (
 type AppProvider struct {
 	Host string
 	Port string
+	Db   *sql.DB
 }
 
 func (a *AppProvider) GetHost() string {
@@ -70,6 +72,15 @@ func (provider *AppProvider) ProvideDB() (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func (provider *AppProvider) Migrate() {
+	if err := migrations.UpUsers(provider.Db); err != nil {
+		log.Fatalf("Error running migration for users table: %v", err)
+	}
+	if err := migrations.UpBooks(provider.Db); err != nil {
+		log.Fatalf("Error running migration for books table: %v", err)
+	}
 }
 
 // ProvideBookController provides the book controller instance for the app

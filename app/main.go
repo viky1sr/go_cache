@@ -21,6 +21,16 @@ func main() {
 	// create app provider instance
 	appProvider := &providers.AppProvider{Host: *host, Port: *port}
 
+	// initialize database connection
+	db, err := appProvider.ProvideDB()
+	if err != nil {
+		log.Fatalf("Failed to connect to DB: %s", err)
+	}
+	appProvider.Db = db
+
+	// migrate database
+	appProvider.Migrate()
+
 	// create router
 	router := appProvider.ProvideRouter()
 	routes.RegisterRoutes(router, appProvider)
