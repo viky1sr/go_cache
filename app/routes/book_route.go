@@ -15,9 +15,9 @@ func RegisterBookRoutes(router *mux.Router, provider *providers.AppProvider) {
 	jwtMiddleware := middleware.JWTMiddleware
 
 	// Protected routes
-	router.Handle("/users", jwtMiddleware(http.HandlerFunc(bookController.GetAllBooks))).Methods("GET")
-	router.Handle("/users", jwtMiddleware(http.HandlerFunc(bookController.CreateBook))).Methods("POST")
-	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.GetBookByID))).Methods("GET")
-	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.UpdateBook))).Methods("PUT")
-	router.Handle("/users/{id}", jwtMiddleware(http.HandlerFunc(bookController.DeleteBook))).Methods("DELETE")
+	router.Handle("/books", jwtMiddleware(http.HandlerFunc(bookController.GetAllBooks))).Methods("GET")
+	router.Handle("/books", jwtMiddleware(http.HandlerFunc(bookController.CreateBook))).Methods("POST")
+	router.Handle("/books/{id}", jwtMiddleware(http.HandlerFunc(bookController.GetBookByID))).Methods("GET")
+	router.Handle("/books/{id}", jwtMiddleware(http.HandlerFunc(bookController.UpdateBook))).Methods("PUT")
+	router.Handle("/books/{id}", jwtMiddleware(http.HandlerFunc(bookController.DeleteBook))).Methods("DELETE")
 }

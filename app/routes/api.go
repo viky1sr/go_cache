@@ -7,7 +7,8 @@ import (
 
 // RegisterRoutes registers all the routes
 func RegisterRoutes(router *mux.Router, appProvider *providers.AppProvider) {
-	RegisterAuthRoutes(router, appProvider)
-	RegisterUserRoutes(router, appProvider)
-	RegisterBookRoutes(router, appProvider)
+	authRouter := router.PathPrefix("/api").Subrouter()
+	RegisterAuthRoutes(authRouter, appProvider)
+	RegisterUserRoutes(authRouter, appProvider)
+	RegisterBookRoutes(authRouter, appProvider)
 }
